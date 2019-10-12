@@ -25,7 +25,7 @@ Nacos 快速入门：[https://nacos.io/en-us/docs/quick-start.html](https://naco
 sh startup.sh -m standalone
 ```
 
-在浏览器打开Nacos web 控制台：http://192.168.10.200:8848/nacos/index.html
+在浏览器打开Nacos web 控制台：http://localhost:8848/nacos/index.html
 
 输入nacos的账号和密码 分别为nacos：nacos
 
@@ -53,7 +53,7 @@ registry {
   type = "nacos"
 
   nacos {
-    serverAddr = "192.168.10.200"
+    serverAddr = "localhost"
     namespace = "public"
     cluster = "default"
   }
@@ -67,7 +67,7 @@ config {
   type = "nacos"
 
   nacos {
-    serverAddr = "192.168.10.200"
+    serverAddr = "localhost"
     namespace = "public"
     cluster = "default"
   }
@@ -78,7 +78,7 @@ config {
 }
 
 ```
-- serverAddr = "192.168.10.200"   ：nacos 的地址
+- serverAddr = "localhost"   ：nacos 的地址
 - namespace = "public" ：nacos的命名空间默认为`public`
 - cluster = "default"  ：集群设置未默认 `default`
 
@@ -120,7 +120,7 @@ store.file.session.reload.read_size=100
 store.db.driver-class-name=com.mysql.jdbc.Driver
 store.db.datasource=dbcp
 store.db.db-type=mysql
-store.db.url=jdbc:mysql://192.168.10.200:3306/seata?useUnicode=true
+store.db.url=jdbc:mysql://localhost:3306/seata?useUnicode=true
 store.db.user=lidong
 store.db.password=cwj887766@@
 store.db.min-conn=1
@@ -150,7 +150,7 @@ metrics.exporter-prometheus-port=9898
 - store.db.driver-class-name： 默认没有，会报错。添加了 `com.mysql.jdbc.Driver`
 - store.db.datasource=dbcp ：数据源 dbcp
 - store.db.db-type=mysql : 存储数据库的类型为`mysql`
-- store.db.url=jdbc:mysql://192.168.10.200:3306/seata?useUnicode=true : 修改为自己的数据库`url`、`port`、`数据库名称`
+- store.db.url=jdbc:mysql://localhost:3306/seata?useUnicode=true : 修改为自己的数据库`url`、`port`、`数据库名称`
 - store.db.user=lidong :数据库的账号
 - store.db.password=cwj887766@@ :数据库的密码
 - service.vgroup_mapping.order-service-seata-service-group=default
