@@ -1,18 +1,6 @@
 ## 1.简介
 >本文主要介绍SpringBoot2.1.5 + Dubbo 2.7.3 + Mybatis 3.4.2 + Nacos 1.1.3 +Seata 0.8.0整合来实现Dubbo分布式事务管理，使用Nacos 作为 Dubbo和Seata的注册中心和配置中心,使用 MySQL 数据库和 MyBatis来操作数据。
 
-如果你还对`SpringBoot`、`Dubbo`、`Nacos`、`Seata`、` Mybatis` 不是很了解的话，这里我为大家整理个它们的官网网站，如下
-
-- SpringBoot：[https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)
-
- - Dubbo：[http://dubbo.apache.org/en-us/](http://dubbo.apache.org/en-us/)
-
-- Nacos：[https://nacos.io/zh-cn/docs/quick-start.html](https://nacos.io/zh-cn/docs/quick-start.html)
-
-- Seata：[https://github.com/seata/seata/wiki/Home_Chinese](https://github.com/seata/seata/wiki/Home_Chinese)
-
-- MyBatis：[http://www.mybatis.org/mybatis-3/zh/index.html](http://www.mybatis.org/mybatis-3/zh/index.html)
-
 在这里我们就不一个一个介绍它们是怎么使用和原理，详细请学习官方文档，在这里我将开始对它们进行整合，完成一个简单的案例，来让大家了解`Seata`来实现`Dubbo`分布式事务管理的基本流程。
 
 ## 2.环境准备
@@ -755,15 +743,15 @@ dubbo.application.name= dubbo-account-example
 dubbo.protocol.id=dubbo
 dubbo.protocol.name=dubbo
 dubbo.registry.id=dubbo-account-example-registry
-dubbo.registry.address=nacos://192.168.10.200:8848
+dubbo.registry.address=nacos://127.0.0.1:8848
 dubbo.protocol.port=20880
 dubbo.application.qosEnable=false
-dubbo.config-center.address=nacos://192.168.10.200:8848
-dubbo.metadata-report.address=nacos://192.168.10.200:8848
+dubbo.config-center.address=nacos://127.0.0.1:8848
+dubbo.metadata-report.address=nacos://127.0.0.1:8848
 
 #====================================mysql 配置============================================
 spring.datasource.driver-class-name=com.mysql.jdbc.Driver
-spring.datasource.url=jdbc:mysql://192.168.10.200:3306/seata?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+spring.datasource.url=jdbc:mysql://127.0.0.1:3306/seata?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
 spring.datasource.username=lidong
 spring.datasource.password=cwj887766@@
 
@@ -780,7 +768,7 @@ registry {
   type = "nacos"
 
   nacos {
-    serverAddr = "192.168.10.200"
+    serverAddr = "127.0.0.1"
     namespace = "public"
     cluster = "default"
   }
@@ -798,7 +786,7 @@ config {
   }
 
   nacos {
-    serverAddr = "192.168.10.200"
+    serverAddr = "127.0.0.1"
     namespace = "public"
     cluster = "default"
   }
@@ -961,7 +949,7 @@ public class AccountExampleApplication {
 ## 4 启动所有的sample模块
 启动 `samples-account`、`samples-order`、`samples-storage`、`samples-business`
 
-并且在nocos的控制台查看注册情况: http://192.168.10.200:8848/nacos/#/serviceManagement
+并且在nocos的控制台查看注册情况: http://127.0.0.1:8848/nacos/#/serviceManagement
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20190905131449502.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9saWRvbmcxNjY1LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70)
 
@@ -995,9 +983,9 @@ public class AccountExampleApplication {
 
 ```
 2019-09-05 12:17:34.097  INFO 21860 --- [nio-8104-exec-4] i.s.s.i.c.controller.BusinessController  : 请求参数：BusinessDTO(userId=1, commodityCode=C201901140001, name=fan, count=50, amount=100)
-2019-09-05 12:17:34.146  INFO 21860 --- [nio-8104-exec-4] i.seata.tm.api.DefaultGlobalTransaction  : Begin new global transaction [192.168.10.200:8091:2021380638]
-2019-09-05 12:17:34.150  INFO 21860 --- [nio-8104-exec-4] i.s.s.i.c.service.BusinessServiceImpl    : 开始全局事务，XID = 192.168.10.200:8091:2021380638
-2019-09-05 12:17:36.966  INFO 21860 --- [nio-8104-exec-4] i.seata.tm.api.DefaultGlobalTransaction  : [192.168.10.200:8091:2021380638] commit status:Committed
+2019-09-05 12:17:34.146  INFO 21860 --- [nio-8104-exec-4] i.seata.tm.api.DefaultGlobalTransaction  : Begin new global transaction [127.0.0.1:8091:2021380638]
+2019-09-05 12:17:34.150  INFO 21860 --- [nio-8104-exec-4] i.s.s.i.c.service.BusinessServiceImpl    : 开始全局事务，XID = 127.0.0.1:8091:2021380638
+2019-09-05 12:17:36.966  INFO 21860 --- [nio-8104-exec-4] i.seata.tm.api.DefaultGlobalTransaction  : [127.0.0.1:8091:2021380638] commit status:Committed
 ```
 事务提交成功，
 
@@ -1042,9 +1030,9 @@ if (!flag) {
 2019-09-05 12:29:32.848  INFO 17264 --- [nio-8104-exec-2] i.s.common.loader.EnhancedServiceLoader  : load TransactionManager[null] extension by class[io.seata.tm.DefaultTransactionManager]
 2019-09-05 12:29:32.849  INFO 17264 --- [nio-8104-exec-2] io.seata.tm.TransactionManagerHolder     : TransactionManager Singleton io.seata.tm.DefaultTransactionManager@461585ac
 2019-09-05 12:29:32.859  INFO 17264 --- [nio-8104-exec-2] i.s.common.loader.EnhancedServiceLoader  : load LoadBalance[null] extension by class[io.seata.discovery.loadbalance.RandomLoadBalance]
-2019-09-05 12:29:32.893  INFO 17264 --- [nio-8104-exec-2] i.seata.tm.api.DefaultGlobalTransaction  : Begin new global transaction [192.168.10.200:8091:2021380674]
-2019-09-05 12:29:32.897  INFO 17264 --- [nio-8104-exec-2] i.s.s.i.c.service.BusinessServiceImpl    : 开始全局事务，XID = 192.168.10.200:8091:2021380674
-2019-09-05 12:29:34.143  INFO 17264 --- [nio-8104-exec-2] i.seata.tm.api.DefaultGlobalTransaction  : [192.168.10.200:8091:2021380674] rollback status:Rollbacked
+2019-09-05 12:29:32.893  INFO 17264 --- [nio-8104-exec-2] i.seata.tm.api.DefaultGlobalTransaction  : Begin new global transaction [127.0.0.1:8091:2021380674]
+2019-09-05 12:29:32.897  INFO 17264 --- [nio-8104-exec-2] i.s.s.i.c.service.BusinessServiceImpl    : 开始全局事务，XID = 127.0.0.1:8091:2021380674
+2019-09-05 12:29:34.143  INFO 17264 --- [nio-8104-exec-2] i.seata.tm.api.DefaultGlobalTransaction  : [127.0.0.1:8091:2021380674] rollback status:Rollbacked
 2019-09-05 12:29:34.158 ERROR 17264 --- [nio-8104-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.RuntimeException: 测试抛异常后，分布式事务回滚！] with root cause
 
 java.lang.RuntimeException: 测试抛异常后，分布式事务回滚！
