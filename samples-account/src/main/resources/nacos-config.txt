@@ -13,6 +13,9 @@ transport.thread-factory.worker-thread-size=8
 transport.shutdown.wait=3
 
 service.vgroup_mapping.account-service-seata-service-group=default
+service.vgroup_mapping.business-service-seata-service-group=default
+service.vgroup_mapping.order-service-seata-service-group=default
+service.vgroup_mapping.storage-service-seata-service-group=default
 
 service.enableDegrade=false
 service.disable=false
